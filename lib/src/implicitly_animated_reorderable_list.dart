@@ -194,8 +194,6 @@ class ImplicitlyAnimatedReorderableListState<E>
     _onDragEnd?.call();
     dragItem = _itemBoxes[key];
 
-    print('Drag start $dragItem');
-
     if (dragIndex != null) {
       _dragStartDy = _itemOffset(key).dy;
       _dragStartScrollOffset = _offset;
@@ -330,7 +328,6 @@ class ImplicitlyAnimatedReorderableListState<E>
 
     if (controller.upperBound == controller.lowerBound) {
       onEnd?.call();
-      print('DO NOT ANIMATE $delta');
       return;
     }
 

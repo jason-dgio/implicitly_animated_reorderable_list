@@ -16,7 +16,7 @@ class Reorderable extends StatefulWidget {
   /// animations based on it.
   final ReorderableBuilder builder;
   const Reorderable({
-    Key key,
+    @required Key key,
     @required this.builder,
   })  : assert(key != null),
         assert(builder != null),
@@ -41,6 +41,7 @@ class ReorderableState extends State<Reorderable> with SingleTickerProviderState
   void initState() {
     super.initState();
     _dragController = AnimationController(vsync: this, duration: Duration.zero);
+    key = widget.key ?? ValueKey(DateTime.now().microsecondsSinceEpoch);
 
     didUpdateWidget(widget);
   }
@@ -48,8 +49,6 @@ class ReorderableState extends State<Reorderable> with SingleTickerProviderState
   @override
   void didUpdateWidget(Reorderable oldWidget) {
     super.didUpdateWidget(oldWidget);
-    key = widget.key ?? ValueKey(DateTime.now().microsecondsSinceEpoch);
-
     _dragAnimation = CurvedAnimation(parent: _dragController, curve: Curves.linear);
   }
 

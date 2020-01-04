@@ -136,7 +136,7 @@ class _LanguagePageState extends State<LanguagePage> {
             },
             itemBuilder: (context, itemAnimation, lang, index) {
               return Reorderable(
-                // key: ValueKey(lang),
+                key: ValueKey(lang),
                 builder: (context, dragAnimation, inDrag) {
                   final tile = _buildTile(dragAnimation, lang, index);
 

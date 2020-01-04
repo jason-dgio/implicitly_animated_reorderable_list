@@ -42,7 +42,7 @@ const afrikaans = Language(
 
 const portuguese = Language(
   englishName: 'Portuguese',
-  nativeName: 'português',
+  nativeName: 'Português',
 );
 
 const List<Language> languages = [

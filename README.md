@@ -79,6 +79,8 @@ ImplicitlyAnimatedReorderableList<Language>(
   itemBuilder: (context, itemAnimation, item, index) {
     // Each item must be wrapped in a Reorderable widget.
     return Reorderable(
+      // Each item must have an unique key.
+      key: ValueKey(item),
       // The animation of the Reorderable builder can be used to
       // change to appearance of the item between dragged and normal
       // state. For example to add elevation. This is not to be confused
@@ -118,4 +120,4 @@ ImplicitlyAnimatedReorderableList<Language>(
   },
 );
 ```
-For a more in depth example click [here](https://github.com/BendixMa/implicitly_animated_reorderable_list/blob/master/example/lib/ui/lang_page.dart).
+> For a more in depth example click [here](https://github.com/BendixMa/implicitly_animated_reorderable_list/blob/master/example/lib/ui/lang_page.dart).
