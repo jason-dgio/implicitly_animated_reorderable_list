@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension GlobalKeyExtension on GlobalKey {
-  RenderBox get renderBox => this.currentContext.renderBox;
+  RenderBox get renderBox => currentContext.renderBox;
 
   Size get size => renderBox.size;
 
@@ -13,7 +13,7 @@ extension GlobalKeyExtension on GlobalKey {
 }
 
 extension BuildContextExtension on BuildContext {
-  RenderBox get renderBox => (this?.findRenderObject() as RenderBox);
+  RenderBox get renderBox => findRenderObject() as RenderBox;
 
   Size get size => renderBox.size;
 
