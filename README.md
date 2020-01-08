@@ -22,7 +22,7 @@ flutter packages get
 
 ## Usage
 
-The package contains two `ListViews`: `ImplicitlyAnimatedList` which is the base class and offers implicit animation for item `insertions`, `removals` and `updates`, and `ImplicitlyAnimatedReorderableList` which extends the `ImplicitlyAnimatedList` and adds reordering support to its items. See examples below on how to use them.
+The package contains two `ListViews`: `ImplicitlyAnimatedList` which is the base class and offers implicit animation for item `insertions`, `removals` as well as `updates`, and `ImplicitlyAnimatedReorderableList` which extends the `ImplicitlyAnimatedList` and adds reordering support to its items. See examples below on how to use them.
 
 ### ImplicitlyAnimatedList
 
