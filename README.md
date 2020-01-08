@@ -1,6 +1,6 @@
 # Implicitly Animated Reorderable List
 
-A Flutter `ListView` that implicitly calculates the changes between two lists using the `MyersDiff` algorithm and animates between them for you. The `ImplicitlyAnimatedReorderableList` reordering support for its items with fully custom animations. See below for examples.<br/>
+A Flutter `ListView` that implicitly calculates the changes between two lists using the `MyersDiff` algorithm and animates between them for you. The `ImplicitlyAnimatedReorderableList` adds reordering support to its items with fully custom animations. See below for examples.
 
 <p style="text-align:center">
     <img width="356px" alt="Demo" src="https://raw.githubusercontent.com/BendixMa/implicitly_animated_reorderable_list/master/assets/demo.gif"/>
@@ -8,7 +8,7 @@ A Flutter `ListView` that implicitly calculates the changes between two lists us
 
 Click [here](https://github.com/BendixMa/implicitly_animated_reorderable_list/blob/master/example/lib/ui/) to view the full example.
 
-## Installing (Soon)
+## Installing
 
 Add it to your `pubspec.yaml` file:
 ```yaml
@@ -22,7 +22,7 @@ flutter packages get
 
 ## Usage
 
-The package contains two `ListViews`: `ImplicitlyAnimatedList` which is the base class and offers implicit animation for item insertions/removals and soon updates and `ImplicitlyAnimatedReorderableList` which extends the `ImplicitlyAnimatedList` and adds reorder support for its items. See examples below on how to use them.
+The package contains two `ListViews`: `ImplicitlyAnimatedList` which is the base class and offers implicit animation for item `insertions`, `removals` and `updates`, and `ImplicitlyAnimatedReorderableList` which extends the `ImplicitlyAnimatedList` and adds reordering support to its items. See examples below on how to use them.
 
 ### ImplicitlyAnimatedList
 
@@ -66,7 +66,7 @@ ImplicitlyAnimatedList<MyGenericType>(
 
 ### ImplicitlyAnimatedReorderableList
 
-`ImplicitlyAnimatedReorderableList` is based on `ImplicitlyAnimatedList` and adds reorderable support to the list.
+`ImplicitlyAnimatedReorderableList` is based on `ImplicitlyAnimatedList` and adds reordering support to the list.
 
 #### Example
 
