@@ -131,7 +131,7 @@ ImplicitlyAnimatedReorderableList<MyGenericType>(
 
 ### Caveats
 
-Note that this package is still in its very early phase and not enough testing has been done to guarantee stability.
+Note that this package is still in its very early phase and not enough testing has been done to guarantee stability.  
 Also note that computing the diff between two very large lists my take significant amount of time (the computation is done on a background isolate though).
 
 ### Acknowledgements
