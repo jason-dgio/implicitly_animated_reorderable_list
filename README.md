@@ -26,7 +26,7 @@ The package contains two `ListViews`: `ImplicitlyAnimatedList` which is the base
 
 ### ImplicitlyAnimatedList
 
-`ImplicitlyAnimatedList` is based on `AnimatedList` and uses the `MyersDiff` algorithm to calculate the difference between two lists and calls `insertItem` and `removeItem` on the `AnimatedListState` for you. The computation is done in background, however note that for very long lists the computation can take a while. 
+`ImplicitlyAnimatedList` is based on `AnimatedList` and uses the `MyersDiff` algorithm to calculate the difference between two lists and calls `insertItem` and `removeItem` on the `AnimatedListState` for you. 
 
 #### Example
 
@@ -128,6 +128,11 @@ ImplicitlyAnimatedReorderableList<MyGenericType>(
 );
 ```
 > For a more in depth example click [here](https://github.com/BendixMa/implicitly_animated_reorderable_list/blob/master/example/lib/ui/lang_page.dart).
+
+### Caveats
+
+Note that this package is still in its very early phase and not enough testing has been done to guarantee stability.
+Also note that computing the diff between two very large lists my take significant amount of time (the computation is done on a background isolate though).
 
 ### Acknowledgements
 
