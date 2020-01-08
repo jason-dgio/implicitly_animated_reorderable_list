@@ -166,7 +166,6 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
   @protected
   @override
   void onInserted(int index, E item) {
-    // print('Inserted $item at $index');
     dataSet.insert(index, item);
     list.insertItem(index, duration: widget.insertDuration);
   }
@@ -176,7 +175,6 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
   @override
   void onRemoved(int index) {
     final item = dataSet.removeAt(index);
-    // print('Removed $item at $index');
     list.removeItem(index, (context, animation) {
       if (removeItemBuilder != null) {
         return removeItemBuilder(context, animation, item);
@@ -192,7 +190,6 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
   void onChanged(int startIndex, List<E> itemsChanged) {
     int i = 0;
     for (final item in itemsChanged) {
-      // print('Changed $item');
       final index = startIndex + i;
       changes[item] = dataSet[index];
       dataSet[index] = item;

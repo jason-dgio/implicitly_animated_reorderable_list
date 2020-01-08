@@ -86,7 +86,7 @@ class ImplicitlyAnimatedReorderableList<E> extends ImplicitlyAnimatedListBase<Re
   /// Called in response to when the dragged item has been released
   /// and animated to its final destination. Here you should update
   /// the underlying data in your model/bloc/database etc.
-  /// 
+  ///
   /// The `item` parameter of the callback is the item that has been reordered
   /// `from` index `to` index. The `data` parameter represents the new data with
   /// the item already being correctly reordered.
@@ -393,15 +393,17 @@ class ImplicitlyAnimatedReorderableListState<E>
       if (dragIndex != null) {
         final toIndex = _itemBoxes[closest.key].index;
 
-        final item = dataSet.removeAt(dragIndex);
-        dataSet.insert(toIndex, item);
+        if (toIndex != dragIndex) {
+          final item = dataSet.removeAt(dragIndex);
+          dataSet.insert(toIndex, item);
 
-        widget.onReorderFinished?.call(
-          item,
-          dragIndex,
-          toIndex,
-          List<E>.from(dataSet),
-        );
+          widget.onReorderFinished?.call(
+            item,
+            dragIndex,
+            toIndex,
+            List<E>.from(dataSet),
+          );
+        }
       }
 
       _cancelDrag();
