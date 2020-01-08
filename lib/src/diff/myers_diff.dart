@@ -2,13 +2,15 @@ import 'package:flutter/foundation.dart';
 
 import '../src.dart';
 
+// This implementation of the MyersDiff algorithm was originally written by David Bota 
+// over here https://gitlab.com/otsoaUnLoco/animated-stream-list.
+
+// ignore: avoid_classes_with_only_static_members
 class DiffUtil<E> {
   static ItemDiffUtil eq;
   static ItemDiffUtil cq;
 
-  static Future<List<Diff>> calculateDiff<E>(
-    DiffCallback<E> cb,
-  ) {
+  static Future<List<Diff>> calculateDiff<E>(DiffCallback<E> cb) {
     eq = cb.areItemsTheSame;
     cq = cb.areItemsTheSame;
     final args = _DiffArguments<E>(cb.oldList, cb.newList);
@@ -108,31 +110,34 @@ List<Diff> _buildPatch<E>(PathNode path, List<E> oldList, List<E> newList) {
   final List<Diff> diffs = [];
 
   if (path.isSnake) {
+    // ignore: parameter_assignments
     path = path.previousNode;
   }
 
   while (path != null && path.previousNode != null && path.previousNode.revisedIndex >= 0) {
     if (path.isSnake) throw Exception();
 
-    int i = path.originIndex;
-    int j = path.revisedIndex;
+    final i = path.originIndex;
+    final j = path.revisedIndex;
 
+    // ignore: parameter_assignments
     path = path.previousNode;
-    int iAnchor = path.originIndex;
-    int jAnchor = path.revisedIndex;
+    final iAnchor = path.originIndex;
+    final jAnchor = path.revisedIndex;
 
-    List<E> original = oldList.sublist(iAnchor, i);
-    List<E> revised = newList.sublist(jAnchor, j);
+    final List<E> original = oldList.sublist(iAnchor, i);
+    final List<E> revised = newList.sublist(jAnchor, j);
 
-    if (original.length == 0 && revised.length != 0) {
+    if (original.isEmpty && revised.isNotEmpty) {
       diffs.add(Insertion(iAnchor, revised.length, revised));
-    } else if (original.length > 0 && revised.length == 0) {
+    } else if (original.isNotEmpty && revised.isEmpty) {
       diffs.add(Deletion(iAnchor, original.length));
     } else {
       diffs.add(Modification(iAnchor, original.length, revised));
     }
 
     if (path.isSnake) {
+      // ignore: parameter_assignments
       path = path.previousNode;
     }
   }

@@ -12,7 +12,7 @@ typedef AnimatedItemBuilder<W extends Widget, E> = W Function(
 typedef RemovedItemBuilder<W extends Widget, E> = W Function(BuildContext context, Animation<double> animation, E item);
 
 typedef UpdatedItemBuilder<W extends Widget, E> = W Function(
-    BuildContext context, Animation<double> animation, E item, dynamic payload);
+    BuildContext context, Animation<double> animation, E item);
 
 abstract class ImplicitlyAnimatedListBase<W extends Widget, E> extends StatefulWidget {
   /// Called, as needed, to build list item widgets.
@@ -24,7 +24,7 @@ abstract class ImplicitlyAnimatedListBase<W extends Widget, E> extends StatefulW
   ///
   /// If not specified, the [ImplicitlyAnimatedList] uses the [itemBuilder] with
   /// the animation reversed.
-  final RemovedItemBuilder<W, E> removedItemBuilder;
+  final RemovedItemBuilder<W, E> removeItemBuilder;
 
   /// An optional builder when an item in the list was changed but not its position.
   ///
@@ -34,10 +34,10 @@ abstract class ImplicitlyAnimatedListBase<W extends Widget, E> extends StatefulW
   /// the new item.
   ///
   /// If not specified, changes will appear instantaneously.
-  final UpdatedItemBuilder<W, E> updatedItemBuilder;
+  final UpdatedItemBuilder<W, E> updateItemBuilder;
 
   /// The data that this [ImplicitlyAnimatedList] should represent.
-  final List<E> data;
+  final List<E> items;
 
   /// Called by the DiffUtil to decide whether two object represent the same Item.
   /// For example, if your items have unique ids, this method should check their id equality.
@@ -53,11 +53,11 @@ abstract class ImplicitlyAnimatedListBase<W extends Widget, E> extends StatefulW
   final Duration updateDuration;
   const ImplicitlyAnimatedListBase({
     Key key,
-    @required this.data,
+    @required this.items,
     @required this.areItemsTheSame,
     @required this.itemBuilder,
-    @required this.removedItemBuilder,
-    @required this.updatedItemBuilder,
+    @required this.removeItemBuilder,
+    @required this.updateItemBuilder,
     @required this.insertDuration,
     @required this.removeDuration,
     @required this.updateDuration,
@@ -70,10 +70,10 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
   AnimatedListState get list => listKey.currentState;
 
   AnimatedItemBuilder<W, E> get itemBuilder => widget.itemBuilder;
-  RemovedItemBuilder<W, E> get removedItemBuilder => widget.removedItemBuilder;
-  UpdatedItemBuilder<W, E> get updatedItemBuilder => widget.updatedItemBuilder;
+  RemovedItemBuilder<W, E> get removeItemBuilder => widget.removeItemBuilder;
+  UpdatedItemBuilder<W, E> get updateItemBuilder => widget.updateItemBuilder;
 
-  DiffApplier _applier;
+  DiffDelegate _delegate;
   CancelableOperation _differ;
 
   // Animation controller for custom animation that are not supported
@@ -101,8 +101,8 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
   void initState() {
     super.initState();
     listKey = GlobalKey();
-    dataSet = List<E>.from(widget.data);
-    _applier = DiffApplier(this);
+    dataSet = List<E>.from(widget.items);
+    _delegate = DiffDelegate(this);
 
     _animController = AnimationController(vsync: this);
     updateAnimation = TweenSequence([
@@ -125,7 +125,7 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
   void didUpdateWidget(ImplicitlyAnimatedListBase oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    newData = List<E>.from(widget.data);
+    newData = List<E>.from(widget.items);
     oldData = List<E>.from(dataSet);
 
     _animController.duration = widget.updateDuration;
@@ -137,14 +137,14 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
     if (!listEquals(oldData, newData)) {
       changes.clear();
 
-      _differ?.cancel();
+      await _differ?.cancel();
       _differ = CancelableOperation.fromFuture(
         DiffUtil.calculateDiff<E>(this),
       );
 
       final diffs = await _differ.value;
       if (diffs == null) return;
-      _applier.applyDiffs(diffs);
+      _delegate.applyDiffs(diffs);
 
       _animController
         ..reset()
@@ -178,8 +178,8 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
     final item = dataSet.removeAt(index);
     // print('Removed $item at $index');
     list.removeItem(index, (context, animation) {
-      if (removedItemBuilder != null) {
-        return removedItemBuilder(context, animation, item);
+      if (removeItemBuilder != null) {
+        return removeItemBuilder(context, animation, item);
       }
 
       return itemBuilder(context, animation, item, index);
@@ -205,7 +205,7 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
   @nonVirtual
   @protected
   Widget buildItem(BuildContext context, Animation<double> animation, E item, int index) {
-    if (widget.updatedItemBuilder != null && changes[item] != null) {
+    if (widget.updateItemBuilder != null && changes[item] != null) {
       return buildUpdatedItemWidget(item);
     }
 
@@ -223,11 +223,10 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
         final value = _animController.value;
         final item = value < 0.5 ? oldItem : newItem;
 
-        return updatedItemBuilder(
+        return updateItemBuilder(
           context,
           updateAnimation,
           item,
-          getChangePayload(oldItem, newItem),
         );
       },
     );

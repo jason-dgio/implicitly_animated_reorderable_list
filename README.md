@@ -1,8 +1,6 @@
 # Implicitly Animated Reorderable List
 
-A Flutter `ListView` that implicitly calculates the changes between two lists using the `MyersDiff` algorithm and animates between them for you. Optionally you can use the `ImplicitlyAnimatedReorderableList`, that can reorder its items with fully custom animations. See below for examples.
-
-Inspired by `Androids` `ListAdapter`.
+A Flutter `ListView` that implicitly calculates the changes between two lists using the `MyersDiff` algorithm and animates between them for you. The `ImplicitlyAnimatedReorderableList` reordering support for its items with fully custom animations. See below for examples.<br/>
 
 <p style="text-align:center">
     <img width="356px" alt="Demo" src="https://raw.githubusercontent.com/BendixMa/implicitly_animated_reorderable_list/master/assets/demo.gif"/>
@@ -28,15 +26,15 @@ The package contains two `ListViews`: `ImplicitlyAnimatedList` which is the base
 
 ### ImplicitlyAnimatedList
 
-`ImplicitlyAnimatedList` is based on `AnimatedList` and uses the `MyersDiff` algorithm to calculate the difference between two lists and calls `insertItem` and `removeItem` on the `AnimatedListState` for you. The computation is done on a background `isolate`, however note that for very long lists the computation can take a while. 
+`ImplicitlyAnimatedList` is based on `AnimatedList` and uses the `MyersDiff` algorithm to calculate the difference between two lists and calls `insertItem` and `removeItem` on the `AnimatedListState` for you. The computation is done in background, however note that for very long lists the computation can take a while. 
 
 #### Example
 
 ```dart
 // Specify the generic type of the data in the list.
-ImplicitlyAnimatedList<Language>(
+ImplicitlyAnimatedList<MyGenericType>(
   // The current items in the list.
-  data: items,
+  items: items,
   // Called by the DiffUtil to decide whether two object represent the same item.
   // For example, if your items have unique ids, this method should check their id equality.
   areItemsTheSame: (a, b) => a.id == b.id,
@@ -73,9 +71,18 @@ ImplicitlyAnimatedList<Language>(
 #### Example
 
 ```dart
-ImplicitlyAnimatedReorderableList<Language>(
-  data: items,
-  areItemsTheSame: (a, b) => a.id == b.id,
+ImplicitlyAnimatedReorderableList<MyGenericType>(
+  items: items,
+  areItemsTheSame: (oldItem, newItem) => oldItem.id == newItem.id,
+  onReorderFinished: (item, from, to, newItems) {
+    // Remember to update the underlying data when the list has been
+    // reordered.
+    setState(() {
+      items
+        ..clear()
+        ..addAll(newItems);
+    });
+  },
   itemBuilder: (context, itemAnimation, item, index) {
     // Each item must be wrapped in a Reorderable widget.
     return Reorderable(
@@ -83,12 +90,11 @@ ImplicitlyAnimatedReorderableList<Language>(
       key: ValueKey(item),
       // The animation of the Reorderable builder can be used to
       // change to appearance of the item between dragged and normal
-      // state. For example to add elevation. This is not to be confused
-      // with the animation of the itemBuilder. Implicit animation are
-      // not yet supported.
+      // state. For example to add elevation when the item is being dragged.
+      // This is not to be confused with the animation of the itemBuilder.
+      // Implicit animations (like AnimatedContainer) are sadly not yet supported.
       builder: (context, dragAnimation, inDrag) {
         final t = dragAnimation.value;
-
         final elevation = lerpDouble(0, 8, t);
         final color = Color.lerp(Colors.white, Colors.white.withOpacity(0.8), t);
 
@@ -96,9 +102,10 @@ ImplicitlyAnimatedReorderableList<Language>(
           sizeFraction: 0.7,
           curve: Curves.easeInOut,
           animation: itemAnimation,
-          child: Box(
+          child: Material(
             color: color,
             elevation: elevation,
+            type: MaterialType.transparency,
             child: ListTile(
               title: Text(item.name),
               // The child of a Handle can initialize a drag/reorder.
@@ -121,3 +128,7 @@ ImplicitlyAnimatedReorderableList<Language>(
 );
 ```
 > For a more in depth example click [here](https://github.com/BendixMa/implicitly_animated_reorderable_list/blob/master/example/lib/ui/lang_page.dart).
+
+### Acknowledgements
+
+The diff algorithm that `ImplicitlyAnimatedList` uses was written by [Dawid Bota](https://gitlab.com/otsoaUnLoco) at [GitLab](https://gitlab.com/otsoaUnLoco/animated-stream-list).

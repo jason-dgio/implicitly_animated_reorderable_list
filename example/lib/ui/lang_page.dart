@@ -124,7 +124,7 @@ class _LanguagePageState extends State<LanguagePage> {
         children: <Widget>[
           ImplicitlyAnimatedReorderableList<Language>(
             shrinkWrap: true,
-            data: selectedLanguages,
+            items: selectedLanguages,
             areItemsTheSame: (oldItem, newItem) => oldItem == newItem,
             onReorderFinished: (movedLanguage, from, to, newData) {
               // Update the underlying data when the item has been reordered

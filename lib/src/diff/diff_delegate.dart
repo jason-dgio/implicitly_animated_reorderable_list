@@ -1,8 +1,8 @@
 import 'diff.dart';
 
-class DiffApplier<E> {
+class DiffDelegate<E> {
   final DiffCallback<E> _callback;
-  const DiffApplier(this._callback);
+  const DiffDelegate(this._callback);
 
   void applyDiffs(List<Diff> diffs) {
     for (final diff in diffs) {
@@ -17,17 +17,21 @@ class DiffApplier<E> {
   }
 
   void _applyModification(Modification<E> diff) {
-    if (diff.size > diff.items.length) {
-      int sizeDifference = diff.size - diff.items.length;
-      while (sizeDifference > 0) {
-        _callback.onRemoved(diff.index + sizeDifference);
-        sizeDifference--;
-      }
-    } else if (diff.items.length > diff.size) {
-      int insertIndex = diff.size;
-      while (insertIndex < diff.items.length) {
-        _callback.onInserted(insertIndex + diff.index, diff.items[insertIndex]);
-        insertIndex++;
+    final diffLength = diff.items.length;
+
+    if (diff.size != diffLength) {
+      if (diff.size > diffLength) {
+        int sizeDifference = diff.size - diffLength;
+        while (sizeDifference > 0) {
+          _callback.onRemoved(diff.index + sizeDifference);
+          sizeDifference--;
+        }
+      } else {
+        int insertIndex = diff.size;
+        while (insertIndex < diffLength) {
+          _callback.onInserted(insertIndex + diff.index, diff.items[insertIndex]);
+          insertIndex++;
+        }
       }
     }
 

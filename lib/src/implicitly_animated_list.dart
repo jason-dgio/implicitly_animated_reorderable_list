@@ -75,11 +75,11 @@ class ImplicitlyAnimatedList<E> extends ImplicitlyAnimatedListBase<Widget, E> {
 
   const ImplicitlyAnimatedList({
     Key key,
-    @required List<E> data,
+    @required List<E> items,
     @required AnimatedItemBuilder<Widget, E> itemBuilder,
     @required ItemDiffUtil<E> areItemsTheSame,
-    RemovedItemBuilder<Widget, E> removedItemBuilder,
-    UpdatedItemBuilder<Widget, E> updatedItemBuilder,
+    RemovedItemBuilder<Widget, E> removeItemBuilder,
+    UpdatedItemBuilder<Widget, E> updateItemBuilder,
     Duration insertDuration = const Duration(milliseconds: 500),
     Duration removeDuration = const Duration(milliseconds: 500),
     Duration updateDuration = const Duration(milliseconds: 500),
@@ -92,14 +92,14 @@ class ImplicitlyAnimatedList<E> extends ImplicitlyAnimatedListBase<Widget, E> {
     this.padding,
   })  : assert(itemBuilder != null),
         assert(areItemsTheSame != null),
-        assert(data != null),
+        assert(items != null),
         super(
           key: key,
-          data: data,
+          items: items,
           itemBuilder: itemBuilder,
           areItemsTheSame: areItemsTheSame,
-          removedItemBuilder: removedItemBuilder,
-          updatedItemBuilder: updatedItemBuilder,
+          removeItemBuilder: removeItemBuilder,
+          updateItemBuilder: updateItemBuilder,
           insertDuration: insertDuration,
           removeDuration: removeDuration,
           updateDuration: updateDuration,
@@ -118,7 +118,7 @@ class ImplicitlyAnimatedListState<E> extends ImplicitlyAnimatedListBaseState<Wid
         final item = dataSet[index];
 
         Widget child;
-        if (widget.updatedItemBuilder != null && changes[item] != null) {
+        if (widget.updateItemBuilder != null && changes[item] != null) {
           child = buildUpdatedItemWidget(item);
         } else {
           child = itemBuilder(context, animation, item, index);

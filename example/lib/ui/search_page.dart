@@ -64,6 +64,39 @@ class _LanguageSearchPageState extends State<LanguageSearchPage> {
     setState(() {});
   }
 
+  Widget _buildItem(Language lang) {
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    return Box(
+      color: Colors.white,
+      onTap: () => Navigator.pop(context, lang),
+      child: ListTile(
+        title: HighlightText(
+          query: text,
+          text: lang.nativeName,
+          style: textTheme.body2.copyWith(
+            fontSize: 16,
+          ),
+          activeStyle: textTheme.body2.copyWith(
+            fontSize: 16,
+            fontWeight: FontWeight.w900,
+          ),
+        ),
+        subtitle: HighlightText(
+          query: text,
+          text: lang.englishName,
+          style: textTheme.body1.copyWith(
+            fontSize: 15,
+          ),
+          activeStyle: textTheme.body1.copyWith(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -127,41 +160,21 @@ class _LanguageSearchPageState extends State<LanguageSearchPage> {
         ),
       ),
       body: ImplicitlyAnimatedList<Language>(
-        data: filteredLanguages,
+        items: filteredLanguages,
+        updateDuration: const Duration(milliseconds: 400),
         areItemsTheSame: (a, b) => a == b,
         itemBuilder: (context, animation, lang, _) {
           return SizeFadeTranstion(
             sizeFraction: 0.7,
             curve: Curves.easeInOut,
             animation: animation,
-            child: Box(
-              color: Colors.white,
-              onTap: () => Navigator.pop(context, lang),
-              child: ListTile(
-                title: HighlightText(
-                  query: text,
-                  text: lang.nativeName,
-                  style: textTheme.body2.copyWith(
-                    fontSize: 16,
-                  ),
-                  activeStyle: textTheme.body2.copyWith(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-                subtitle: HighlightText(
-                  query: text,
-                  text: lang.englishName,
-                  style: textTheme.body1.copyWith(
-                    fontSize: 15,
-                  ),
-                  activeStyle: textTheme.body1.copyWith(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
+            child: _buildItem(lang),
+          );
+        },
+        updateItemBuilder: (context, animation, lang) {
+          return FadeTransition(
+            opacity: animation,
+            child: _buildItem(lang),
           );
         },
       ),
