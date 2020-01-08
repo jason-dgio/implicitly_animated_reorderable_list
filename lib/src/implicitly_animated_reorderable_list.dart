@@ -547,7 +547,6 @@ class ImplicitlyAnimatedReorderableListState<E>
         return Transform.translate(
           offset: Offset(0, dy),
           child: Container(
-            clipBehavior: Clip.none,
             key: _dragKey,
             child: dragWidget,
           ),
