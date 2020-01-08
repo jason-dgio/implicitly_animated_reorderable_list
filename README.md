@@ -1,6 +1,6 @@
 # Implicitly Animated Reorderable List
 
-A Flutter `ListView` that implicitly calculates the changes between two lists using the `MyersDiff` algorithm and animates between them for you. The `ImplicitlyAnimatedReorderableList` adds reordering support to its items with fully custom animations. See below for examples.
+A Flutter `ListView` that implicitly calculates the changes between two lists using the `MyersDiff` algorithm and animates between them for you. The `ImplicitlyAnimatedReorderableList` adds reordering support to its items with fully custom animations.
 
 <p style="text-align:center">
     <img width="356px" alt="Demo" src="https://raw.githubusercontent.com/BendixMa/implicitly_animated_reorderable_list/master/assets/demo.gif"/>
