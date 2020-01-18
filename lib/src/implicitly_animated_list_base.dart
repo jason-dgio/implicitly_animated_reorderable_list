@@ -196,7 +196,7 @@ abstract class ImplicitlyAnimatedListBaseState<W extends Widget, B extends Impli
       i++;
     }
 
-    setState(() {});
+    if(mounted) setState(() {});
   }
 
   @nonVirtual
